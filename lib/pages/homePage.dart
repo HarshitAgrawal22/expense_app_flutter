@@ -15,6 +15,14 @@ class homePage extends StatefulWidget {
 class _homePageState extends State<homePage> {
   TextEditingController newExpenseNameController = new TextEditingController(),
       NewExpenseAmountController = new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<ExpenseData>(context, listen: false).prepareData();
+  }
+
   void addNewExpense() {
     showDialog(
       context: context,
@@ -71,15 +79,18 @@ class _homePageState extends State<homePage> {
   }
 
   void save() {
-    ExpenseItem newExpense = ExpenseItem(
-        name: newExpenseNameController.text,
-        amount: NewExpenseAmountController.text,
-        dateTime: DateTime.now());
-    Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
-    newExpenseNameController.clear();
-    NewExpenseAmountController.clear();
-    Navigator.pop(context);
-    setState(() {});
+    if (newExpenseNameController.text.isNotEmpty &&
+        NewExpenseAmountController.text.isNotEmpty) {
+      ExpenseItem newExpense = ExpenseItem(
+          name: newExpenseNameController.text,
+          amount: NewExpenseAmountController.text,
+          dateTime: DateTime.now());
+      Provider.of<ExpenseData>(context, listen: false)
+          .addNewExpense(newExpense);
+      newExpenseNameController.clear();
+      NewExpenseAmountController.clear();
+      Navigator.pop(context);
+    }
   }
 
   void cancel() {

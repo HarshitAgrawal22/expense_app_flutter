@@ -1,9 +1,15 @@
 import 'package:expense_app/database/expenseData.dart';
 import 'package:expense_app/pages/homePage.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  // initialize hive
+  await Hive.initFlutter();
+
+  // open the hive box
+  await Hive.openBox("expenseDB");
   runApp(const MyApp());
 }
 
@@ -23,4 +29,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Shreyanshi gets angry when she is sleeping 
+// Shreyanshi gets angry when she is sleeping

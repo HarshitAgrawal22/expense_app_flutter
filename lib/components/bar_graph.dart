@@ -70,14 +70,13 @@ class MyGraph extends StatelessWidget {
   // This method creates a BarChartGroupData with multiple BarChartRodData for each expense
   BarChartGroupData createBarGroup(
       BuildContext context, int x, List<double> expenses, List<Color> colors) {
-    double cumulativeY = 0; // To track the cumulative height of expenses
+    // To track the cumulative height of expenses
 
     return BarChartGroupData(
       x: x,
       barRods: expenses.asMap().entries.map((entry) {
         int index = entry.key;
         double expense = entry.value;
-        cumulativeY += expense; // Increment cumulative height
 
         return BarChartRodData(
           toY: expense,
