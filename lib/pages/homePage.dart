@@ -14,19 +14,36 @@ class homePage extends StatefulWidget {
 
 class _homePageState extends State<homePage> {
   TextEditingController newExpenseNameController = new TextEditingController(),
-      NewExpenseAmountController = new TextEditingController();
+      NewExpenseAmountController = new TextEditingController(),
+      NewIsExpenseController = new TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<ExpenseData>(context, listen: false).prepareData();
+  }
+
+  void save(bool isRecurring) {
+    print(isRecurring);
+    if (newExpenseNameController.text.isNotEmpty &&
+        NewExpenseAmountController.text.isNotEmpty) {
+      ExpenseItem newExpense = ExpenseItem(
+          name: newExpenseNameController.text,
+          amount: NewExpenseAmountController.text,
+          isExpense: isRecurring, // Saving the boolean value
+          dateTime: DateTime.now());
+      Provider.of<ExpenseData>(context, listen: false)
+          .addNewExpense(newExpense);
+      newExpenseNameController.clear();
+      NewExpenseAmountController.clear();
+      Navigator.pop(context);
+    }
   }
 
   void addNewExpense() {
     showDialog(
       context: context,
-      builder: (contex) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: Text(
           "Add New Expense",
           style: TextStyle(color: Colors.white),
@@ -35,32 +52,42 @@ class _homePageState extends State<homePage> {
         content: SingleChildScrollView(
           child: Column(
             children: [
-//Expense name
-
+              // Expense name
               TextField(
                 controller: newExpenseNameController,
                 keyboardType: TextInputType.name,
                 style: TextStyle(color: Colors.red),
-                // here we have defined the type of keyboard we will need in it (String)
                 decoration: InputDecoration(
                     hintText: "Expense Name...",
                     hintStyle: TextStyle(color: Colors.red)),
               ),
-              // expense amount
+              // Expense amount
               TextField(
                 controller: NewExpenseAmountController,
                 keyboardType: TextInputType.number,
                 style: TextStyle(color: Colors.red),
-                // Here we have defined that we will need the number type keyboard
                 decoration: InputDecoration(
                     hintText: "Rupees...",
+                    hintStyle: TextStyle(color: Colors.red)),
+              ),
+              // Boolean Input (Recurring Expense)
+              TextField(
+                controller: NewIsExpenseController,
+                keyboardType: TextInputType.number,
+                style: TextStyle(color: Colors.red),
+                decoration: InputDecoration(
+                    hintText: "isExpense",
                     hintStyle: TextStyle(color: Colors.red)),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   MaterialButton(
-                    onPressed: save,
+                    onPressed: () {
+                      print("${NewIsExpenseController.text} is the data ");
+                      print(double.parse(NewIsExpenseController.text) == 0.0);
+                      save(double.parse(NewIsExpenseController.text) == 0.0);
+                    }, // Pass updated value
                     child: Text("Save"),
                     color: Colors.green[900],
                   ),
@@ -68,29 +95,14 @@ class _homePageState extends State<homePage> {
                     onPressed: cancel,
                     child: Text("Cancel"),
                     color: Colors.red[900],
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void save() {
-    if (newExpenseNameController.text.isNotEmpty &&
-        NewExpenseAmountController.text.isNotEmpty) {
-      ExpenseItem newExpense = ExpenseItem(
-          name: newExpenseNameController.text,
-          amount: NewExpenseAmountController.text,
-          dateTime: DateTime.now());
-      Provider.of<ExpenseData>(context, listen: false)
-          .addNewExpense(newExpense);
-      newExpenseNameController.clear();
-      NewExpenseAmountController.clear();
-      Navigator.pop(context);
-    }
   }
 
   void cancel() {
@@ -101,7 +113,6 @@ class _homePageState extends State<homePage> {
 
   @override
   Widget build(BuildContext context) {
-    // here consumer means it will consume the data
     return Consumer<ExpenseData>(
       builder: (context, value, child) => Scaffold(
         backgroundColor: Colors.black,
@@ -116,21 +127,10 @@ class _homePageState extends State<homePage> {
             SizedBox(
               height: MediaQuery.sizeOf(context).height / 20,
             ),
-
-            // Center(
-            //   child: Text(
-            //     "commutative expenses",
-            //     style: TextStyle(fontSize: 25, color: Colors.white),
-            //   ),
-            // ),
-
             expenseSummary(startOfWeek: value.startOfWeekDate()),
-            // This is the list of expenses on that day
-
             SizedBox(
               height: MediaQuery.sizeOf(context).height / 20,
             ),
-
             SingleChildScrollView(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -139,6 +139,7 @@ class _homePageState extends State<homePage> {
                 itemBuilder: (context, index) => expenseTile(
                     deleteTile: () =>
                         value.deleteExpense(value.getAllExpenseList()[index]),
+                    isExpense: value.getAllExpenseList()[index].isExpense,
                     name: value.getAllExpenseList()[index].name,
                     amount: value.getAllExpenseList()[index].amount,
                     dateTime: value.getAllExpenseList()[index].dateTime),

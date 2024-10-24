@@ -1,15 +1,16 @@
+import 'package:expense_app/models/expenseItems.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class MyGraph extends StatelessWidget {
   final double? maxY;
-  final List<double> sunExpenses;
-  final List<double> monExpenses;
-  final List<double> tueExpenses;
-  final List<double> wedExpenses;
-  final List<double> thuExpenses;
-  final List<double> friExpenses;
-  final List<double> satExpenses;
+  final List<ExpenseItem> sunExpenses;
+  final List<ExpenseItem> monExpenses;
+  final List<ExpenseItem> tueExpenses;
+  final List<ExpenseItem> wedExpenses;
+  final List<ExpenseItem> thuExpenses;
+  final List<ExpenseItem> friExpenses;
+  final List<ExpenseItem> satExpenses;
 
   const MyGraph(
       {super.key,
@@ -68,20 +69,21 @@ class MyGraph extends StatelessWidget {
   }
 
   // This method creates a BarChartGroupData with multiple BarChartRodData for each expense
-  BarChartGroupData createBarGroup(
-      BuildContext context, int x, List<double> expenses, List<Color> colors) {
+  BarChartGroupData createBarGroup(BuildContext context, int x,
+      List<ExpenseItem> expenses, List<Color> colors) {
     // To track the cumulative height of expenses
 
     return BarChartGroupData(
       x: x,
       barRods: expenses.asMap().entries.map((entry) {
         int index = entry.key;
-        double expense = entry.value;
+        double expense = double.parse(entry.value.amount);
 
         return BarChartRodData(
           toY: expense,
-          color: colors[
-              index % colors.length], // Use a different color for each expense
+          color: entry.value.isExpense ? Colors.red : Colors.green,
+
+          //  colors[           index % colors.length], // Use a different color for each expense
           width: MediaQuery.sizeOf(context).width /
               100, // Width of the bar (can adjust)
           borderRadius: BorderRadius.zero,

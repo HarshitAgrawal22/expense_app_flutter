@@ -71,13 +71,10 @@ class ExpenseData extends ChangeNotifier {
 
   /*
   
-  we will have two methods to classify the expenses 
-  
+  we will have two methods to classify the expenses   
   1. on daily basis 
   2. on weekly basis 
-   
-  
-  
+
    */
   Map<String, double> calculateDailyExpenseSummary() {
     Map<String, double> dailyExpenseSummary = {};
@@ -101,16 +98,57 @@ class ExpenseData extends ChangeNotifier {
 
   Map<String, List<double>> getAllExpenses() {
     Map<String, List<double>> dailyExpenseSummary = {};
+
+    print("${overAllExpenseList}  are all the transactions");
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
+      if (expense.isExpense) {
+        if (dailyExpenseSummary.containsKey(date)) {
+          dailyExpenseSummary[date]!.add(amount);
+        } else {
+          dailyExpenseSummary.addAll({
+            date: [amount]
+          });
+        }
+      }
+    }
+    getAllTransactions();
+    return dailyExpenseSummary;
+  }
 
-      if (dailyExpenseSummary.containsKey(date)) {
-        dailyExpenseSummary[date]!.add(amount);
+  Map<String, List<ExpenseItem>> getAllTransactions() {
+    Map<String, List<ExpenseItem>> allExpenses = {};
+    for (var expense in overAllExpenseList) {
+      String date = convertDateTimeToString(expense.dateTime);
+
+      if (allExpenses.containsKey(date)) {
+        allExpenses[date]!.add(expense);
       } else {
-        dailyExpenseSummary.addAll({
-          date: [amount]
+        allExpenses.addAll({
+          date: [expense]
         });
+      }
+    }
+    for (var i in allExpenses.values) {
+      print(i);
+    }
+    return allExpenses;
+  }
+
+  Map<String, List<double>> getAllCredits() {
+    Map<String, List<double>> dailyExpenseSummary = {};
+    for (var expense in overAllExpenseList) {
+      String date = convertDateTimeToString(expense.dateTime);
+      double amount = double.parse(expense.amount);
+      if (!expense.isExpense) {
+        if (dailyExpenseSummary.containsKey(date)) {
+          dailyExpenseSummary[date]!.add(amount);
+        } else {
+          dailyExpenseSummary.addAll({
+            date: [amount]
+          });
+        }
       }
     }
     return dailyExpenseSummary;

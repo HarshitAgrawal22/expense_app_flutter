@@ -31,7 +31,8 @@ https://sider.ai/invited?c=2b30f1259d6cece0cb73b038c240318e
       List<dynamic> expenseFormatted = [
         expense.name,
         expense.amount,
-        expense.dateTime
+        expense.dateTime,
+        expense.isExpense
       ];
       allExpensesFormatted.add(expenseFormatted);
     }
@@ -44,22 +45,23 @@ https://sider.ai/invited?c=2b30f1259d6cece0cb73b038c240318e
 
   List<ExpenseItem> readData() {
 /*
-Data stored in the databse is in the string + datetime  format
+Data stored in the database is in the string + datetime  format
 we will need to convert that to expenseItem objects 
 */
 
     List savedExpenses = myBox.get("all_expenses") ?? [];
     List<ExpenseItem> allExpenses = [];
-
+    print(savedExpenses);
     for (int i = 0; i < savedExpenses.length; i++) {
       // Collecting individual data
       String name = savedExpenses[i][0];
       String amount = savedExpenses[i][1];
       DateTime datetime = savedExpenses[i][2];
+      bool isExpense = savedExpenses[i][3];
 // Create expenseItem object
 
-      ExpenseItem expense =
-          new ExpenseItem(name: name, amount: amount, dateTime: datetime);
+      ExpenseItem expense = new ExpenseItem(
+          name: name, amount: amount, dateTime: datetime, isExpense: isExpense);
 
       // add the item to the list
       allExpenses.add(expense);
