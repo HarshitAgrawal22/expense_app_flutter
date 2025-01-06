@@ -40,6 +40,7 @@ class _homePageState extends State<homePage> {
     }
   }
 
+  String? selectedOption;
   void addNewExpense() {
     showDialog(
       context: context,
@@ -71,22 +72,45 @@ class _homePageState extends State<homePage> {
                     hintStyle: TextStyle(color: Colors.red)),
               ),
               // Boolean Input (Recurring Expense)
-              TextField(
-                controller: NewIsExpenseController,
-                keyboardType: TextInputType.number,
-                style: TextStyle(color: Colors.red),
-                decoration: InputDecoration(
-                    hintText: "isExpense",
-                    hintStyle: TextStyle(color: Colors.red)),
+              // TextField(
+              //   controller: NewIsExpenseController,
+              //   keyboardType: TextInputType.number,
+              //   style: TextStyle(color: Colors.red),
+              //   decoration: InputDecoration(
+              //       hintText: "isExpense",
+              //       hintStyle: TextStyle(color: Colors.red)),
+              // ),
+              DropdownButton<String>(
+                borderRadius: BorderRadius.circular(12),
+                value: selectedOption,
+                hint: Text(
+                  "Select an option",
+                  style: TextStyle(color: Colors.red),
+                ), // Placeholder text
+                items: <String>['Expense', 'Credit'].map((String value1) {
+                  return DropdownMenuItem<String>(
+                    value: value1,
+                    child: Text(value1),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedOption = newValue; // Update the selected value
+                  });
+                },
+                dropdownColor:
+                    Colors.grey[600], // Background color of the dropdown
+                icon: Icon(Icons.arrow_drop_down), // Dropdown icon
+                style:
+                    TextStyle(color: Colors.yellow, fontSize: 16), // Text style
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   MaterialButton(
                     onPressed: () {
-                      print("${NewIsExpenseController.text} is the data ");
-                      print(double.parse(NewIsExpenseController.text) == 0.0);
-                      save(double.parse(NewIsExpenseController.text) == 0.0);
+                      save(selectedOption == "Expense");
+                      selectedOption = null;
                     }, // Pass updated value
                     child: Text("Save"),
                     color: Colors.green[900],
@@ -120,7 +144,7 @@ class _homePageState extends State<homePage> {
           onPressed: addNewExpense,
           child: Icon(Icons.add),
           foregroundColor: Colors.black,
-          backgroundColor: Colors.red[900],
+          backgroundColor: Colors.yellow,
         ),
         body: ListView(
           children: [
@@ -128,23 +152,6 @@ class _homePageState extends State<homePage> {
               height: MediaQuery.sizeOf(context).height / 20,
             ),
             expenseSummary(startOfWeek: value.startOfWeekDate()),
-            SizedBox(
-              height: MediaQuery.sizeOf(context).height / 20,
-            ),
-            SingleChildScrollView(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: value.getAllExpenseList().length,
-                itemBuilder: (context, index) => expenseTile(
-                    deleteTile: () =>
-                        value.deleteExpense(value.getAllExpenseList()[index]),
-                    isExpense: value.getAllExpenseList()[index].isExpense,
-                    name: value.getAllExpenseList()[index].name,
-                    amount: value.getAllExpenseList()[index].amount,
-                    dateTime: value.getAllExpenseList()[index].dateTime),
-              ),
-            ),
           ],
         ),
       ),

@@ -4,6 +4,8 @@ import 'package:expense_app/datetime/date__time_helper.dart';
 import 'package:expense_app/models/expenseItems.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_app/pages/totalExpensespage.dart';
+import 'package:expense_app/components/expense_title.dart';
 
 class expenseSummary extends StatelessWidget {
   final DateTime startOfWeek;
@@ -38,6 +40,18 @@ class expenseSummary extends StatelessWidget {
     return total;
   }
 
+  List<int> getWeekSummary(List<ExpenseItem> data) {
+    int Expenses = 0, Credits = 0;
+    for (ExpenseItem item in data) {
+      if (item.isExpense) {
+        Expenses += int.parse(item.amount);
+      } else {
+        Credits += int.parse(item.amount);
+      }
+    }
+    return [Expenses, Credits];
+  }
+
   @override
   Widget build(BuildContext context) {
     // getting the date of each day of the week
@@ -68,12 +82,12 @@ class expenseSummary extends StatelessWidget {
                     Text(
                       "Total expense: ",
                       style: TextStyle(
-                          fontSize: MediaQuery.sizeOf(context).height / 50,
+                          fontSize: MediaQuery.sizeOf(context).height / 60,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "${getWeekTotal(value.getAllExpenses().values.toList())}",
+                      "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[0]}",
                       style: TextStyle(
                           color: Colors.red,
                           fontSize: MediaQuery.sizeOf(context).height / 55),
@@ -84,15 +98,43 @@ class expenseSummary extends StatelessWidget {
                     Text(
                       "Total Credits: ",
                       style: TextStyle(
-                          fontSize: MediaQuery.sizeOf(context).height / 50,
+                          fontSize: MediaQuery.sizeOf(context).height / 60,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "${getWeekTotal(value.getAllCredits().values.toList())}",
+                      "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[1]}",
                       style: TextStyle(
                           color: Colors.green,
                           fontSize: MediaQuery.sizeOf(context).height / 55),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "Balance: ${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[1] - getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[0]}",
+                      style: TextStyle(
+                          color: Colors.yellow,
+                          fontSize: MediaQuery.sizeOf(context).height / 45),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: MediaQuery.sizeOf(context).height / 30,
+                      ),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => totalExpensePage()));
+                        },
+                        // height: MediaQuery.sizeOf(context).height / 5,
+                        color: Colors.grey[800],
+                        child: Text(
+                          "See All Transactions ->",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -109,6 +151,38 @@ class expenseSummary extends StatelessWidget {
                       thuExpenses: value.getAllTransactions()[thursday] ?? [],
                       friExpenses: value.getAllTransactions()[friday] ?? [],
                       satExpenses: value.getAllTransactions()[saturday] ?? []),
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height / 40,
+                ),
+                SingleChildScrollView(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: value
+                        .getThisWeekTransactions(sunday, monday, tuesday,
+                            wednesday, thursday, friday, saturday)
+                        .length,
+                    itemBuilder: (context, index) => expenseTile(
+                        deleteTile: () => value.deleteExpense(value.getThisWeekTransactions(
+                            sunday,
+                            monday,
+                            tuesday,
+                            wednesday,
+                            thursday,
+                            friday,
+                            saturday)[index]),
+                        isExpense: value
+                            .getThisWeekTransactions(sunday, monday, tuesday,
+                                wednesday, thursday, friday, saturday)[index]
+                            .isExpense,
+                        name: value
+                            .getThisWeekTransactions(
+                                sunday, monday, tuesday, wednesday, thursday, friday, saturday)[index]
+                            .name,
+                        amount: value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday)[index].amount,
+                        dateTime: value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday)[index].dateTime),
+                  ),
                 ),
               ],
             ));

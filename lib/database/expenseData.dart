@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 class ExpenseData extends ChangeNotifier {
   // list of all data
   List<ExpenseItem> overAllExpenseList = [];
+  List<ExpenseItem> thisWeekExpenseList = [];
 // get expense list
   List<ExpenseItem> getAllExpenseList() {
     return overAllExpenseList;
@@ -117,6 +118,61 @@ class ExpenseData extends ChangeNotifier {
     return dailyExpenseSummary;
   }
 
+  Map<String, List<double>> getThisWeekExpenses() {
+    Map<String, List<double>> dailyExpenseSummary = {};
+
+    print("${overAllExpenseList}  are all the transactions");
+    for (var expense in overAllExpenseList) {
+      String date = convertDateTimeToString(expense.dateTime);
+      double amount = double.parse(expense.amount);
+      if (expense.isExpense) {
+        if (dailyExpenseSummary.containsKey(date)) {
+          dailyExpenseSummary[date]!.add(amount);
+        } else {
+          dailyExpenseSummary.addAll({
+            date: [amount]
+          });
+        }
+      }
+    }
+    getAllTransactions();
+    return dailyExpenseSummary;
+  }
+
+  List<ExpenseItem> getThisWeekTransactions(
+      String sunday,
+      String monday,
+      String tuesday,
+      String wednesday,
+      String thursday,
+      String friday,
+      String saturday) {
+    Map<String, List<ExpenseItem>> thisWeekExpenses = {};
+    for (var expense in overAllExpenseList) {
+      String date = convertDateTimeToString(expense.dateTime);
+
+      if (thisWeekExpenses.containsKey(date)) {
+        thisWeekExpenses[date]!.add(expense);
+      } else {
+        thisWeekExpenses.addAll({
+          date: [expense]
+        });
+      }
+    }
+    List<ExpenseItem> finalList = [
+      ...thisWeekExpenses[sunday] ?? [],
+      ...thisWeekExpenses[monday] ?? [],
+      ...thisWeekExpenses[tuesday] ?? [],
+      ...thisWeekExpenses[wednesday] ?? [],
+      ...thisWeekExpenses[thursday] ?? [],
+      ...thisWeekExpenses[friday] ?? [],
+      ...thisWeekExpenses[saturday] ?? []
+    ];
+    print("$finalList  is the value in final list");
+
+    return finalList.reversed.toList();
+  }
+
   Map<String, List<ExpenseItem>> getAllTransactions() {
     Map<String, List<ExpenseItem>> allExpenses = {};
     for (var expense in overAllExpenseList) {
@@ -133,6 +189,7 @@ class ExpenseData extends ChangeNotifier {
     for (var i in allExpenses.values) {
       print(i);
     }
+
     return allExpenses;
   }
 

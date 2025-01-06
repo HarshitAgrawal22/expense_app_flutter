@@ -19,4 +19,4 @@ String convertDateTimeToString(DateTime datetime) {
 
 // DateTime.now()-> 2023/2/11
 
-// this is the format in which we will get the data in return but here we have already ignored the hour and seconds format .
+// this is the format in which we will get the dat a in return but here we have already ignored the hour and seconds format .
