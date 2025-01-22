@@ -23,14 +23,13 @@ class _homePageState extends State<homePage> {
     Provider.of<ExpenseData>(context, listen: false).prepareData();
   }
 
-  void save(bool isRecurring) {
-    print(isRecurring);
+  void save(String task) {
     if (newExpenseNameController.text.isNotEmpty &&
         NewExpenseAmountController.text.isNotEmpty) {
       ExpenseItem newExpense = ExpenseItem(
           name: newExpenseNameController.text,
           amount: NewExpenseAmountController.text,
-          isExpense: isRecurring, // Saving the boolean value
+          task: task, // Saving the boolean value
           dateTime: DateTime.now());
       Provider.of<ExpenseData>(context, listen: false)
           .addNewExpense(newExpense);
@@ -87,10 +86,16 @@ class _homePageState extends State<homePage> {
                   "Select an option",
                   style: TextStyle(color: Colors.red),
                 ), // Placeholder text
-                items: <String>['Expense', 'Credit'].map((String value1) {
+                items: <String>['expense', 'credit', 'borrowed', "lent"]
+                    .map((String value1) {
                   return DropdownMenuItem<String>(
                     value: value1,
-                    child: Text(value1),
+                    child: Text(
+                      value1.toUpperCase(),
+                      style: TextStyle(
+                          letterSpacing:
+                              MediaQuery.sizeOf(context).width / 100),
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -109,15 +114,21 @@ class _homePageState extends State<homePage> {
                 children: [
                   MaterialButton(
                     onPressed: () {
-                      save(selectedOption == "Expense");
+                      save(selectedOption!);
                       selectedOption = null;
                     }, // Pass updated value
-                    child: Text("Save"),
-                    color: Colors.green[900],
+                    child: Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.green[700],
                   ),
                   MaterialButton(
                     onPressed: cancel,
-                    child: Text("Cancel"),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.white),
+                    ),
                     color: Colors.red[900],
                   ),
                 ],

@@ -1,3 +1,4 @@
+import 'package:expense_app/components/to_take_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_app/components/expense_summary.dart' as expense_summary;
 import 'package:expense_app/components/expense_title.dart';
@@ -67,10 +68,10 @@ class _totalExpensePageState extends State<totalExpensePage> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: value.getAllExpenseList().length,
-                  itemBuilder: (context, index) => expenseTile(
+                  itemBuilder: (context, index) => to_take_tile(
                       deleteTile: () =>
                           value.deleteExpense(value.getAllExpenseList()[index]),
-                      isExpense: value.getAllExpenseList()[index].isExpense,
+                      task: value.getAllExpenseList()[index].task,
                       name: value.getAllExpenseList()[index].name,
                       amount: value.getAllExpenseList()[index].amount,
                       dateTime: value.getAllExpenseList()[index].dateTime),

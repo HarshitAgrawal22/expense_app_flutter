@@ -1,7 +1,9 @@
 import 'package:expense_app/components/bar_graph.dart';
+import 'package:expense_app/components/to_take_tile.dart';
 import 'package:expense_app/database/expenseData.dart';
 import 'package:expense_app/datetime/date__time_helper.dart';
 import 'package:expense_app/models/expenseItems.dart';
+import 'package:expense_app/utilities/noti_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_app/pages/totalExpensespage.dart';
@@ -41,15 +43,31 @@ class expenseSummary extends StatelessWidget {
   }
 
   List<int> getWeekSummary(List<ExpenseItem> data) {
-    int Expenses = 0, Credits = 0;
+    int Expenses = 0, Credits = 0, borrowed = 0, loan = 0;
     for (ExpenseItem item in data) {
-      if (item.isExpense) {
+      if (item.task == "expense") {
         Expenses += int.parse(item.amount);
-      } else {
+      } else if (item.task == "credit") {
         Credits += int.parse(item.amount);
+      } else if (item.task == "borrowed") {
+        borrowed += int.parse(item.amount);
+      } else if (item.task == "lent") {
+        loan += int.parse(item.amount);
       }
     }
-    return [Expenses, Credits];
+    return [Expenses, Credits, borrowed, loan];
+  }
+
+  int getTotal(List weekExpenses) {
+    print("${weekExpenses}  are the");
+    int total = 0;
+    for (List<double> dayExpense in weekExpenses) {
+      for (double expense in dayExpense) {
+        total += expense.toInt();
+      }
+    }
+
+    return total;
   }
 
   @override
@@ -74,69 +92,66 @@ class expenseSummary extends StatelessWidget {
         builder: (context, value, child) => Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: MediaQuery.sizeOf(context).width / 30,
-                            vertical: MediaQuery.sizeOf(context).height / 30)),
-                    Text(
-                      "Total expense: ",
-                      style: TextStyle(
-                          fontSize: MediaQuery.sizeOf(context).height / 60,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                    Row(
+                      children: [
+                        Text(
+                          "Expense: ",
+                          style: TextStyle(
+                              fontSize: MediaQuery.sizeOf(context).height / 60,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[0]}",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: MediaQuery.sizeOf(context).height / 55),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[0]}",
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: MediaQuery.sizeOf(context).height / 55),
+                    Row(
+                      children: [
+                        Text(
+                          "Credits: ",
+                          style: TextStyle(
+                              fontSize: MediaQuery.sizeOf(context).height / 60,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[1]}",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontSize: MediaQuery.sizeOf(context).height / 55),
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width / 10,
-                    ),
-                    Text(
-                      "Total Credits: ",
-                      style: TextStyle(
-                          fontSize: MediaQuery.sizeOf(context).height / 60,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[1]}",
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontSize: MediaQuery.sizeOf(context).height / 55),
-                    )
                   ],
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height / 40,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      "Balance: ${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[1] - getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[0]}",
+                      "Wallet: ${getTotal(value.getAllCredits().values.toList()) - getTotal(value.getAllExpenses().values.toList())}",
                       style: TextStyle(
                           color: Colors.yellow,
                           fontSize: MediaQuery.sizeOf(context).height / 45),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: MediaQuery.sizeOf(context).height / 30,
-                      ),
-                      child: MaterialButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => totalExpensePage()));
-                        },
-                        // height: MediaQuery.sizeOf(context).height / 5,
-                        color: Colors.grey[800],
-                        child: Text(
-                          "See All Transactions ->",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    )
+                    Text(
+                      "Total: ${getTotal(value.getAllCredits().values.toList()) + getTotal(value.getAllLents().values.toList()) - getTotal(value.getAllExpenses().values.toList()) - -getTotal(value.getAllBorrows().values.toList())}",
+                      style: TextStyle(
+                          color: Colors.yellow,
+                          fontSize: MediaQuery.sizeOf(context).height / 45),
+                    ),
                   ],
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height / 40,
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 3,
@@ -155,6 +170,81 @@ class expenseSummary extends StatelessWidget {
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height / 40,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Borrowed: ",
+                          style: TextStyle(
+                              fontSize: MediaQuery.sizeOf(context).height / 60,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[2]}",
+                          style: TextStyle(
+                              color: Colors.purple,
+                              fontSize: MediaQuery.sizeOf(context).height / 55),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Lent: ",
+                          style: TextStyle(
+                              fontSize: MediaQuery.sizeOf(context).height / 60,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[3]}",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: MediaQuery.sizeOf(context).height / 55),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.sizeOf(context).height / 30,
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      NotificationService()
+                          .showNotification(title: "billo", body: "rani");
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => totalExpensePage()));
+                    },
+                    // height: MediaQuery.sizeOf(context).height / 5,
+                    color: Colors.grey[800],
+                    child: Text(
+                      "See All Transactions ->",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.sizeOf(context).height / 30,
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      NotificationService()
+                          .showNotification(title: "billo", body: "rani");
+                    },
+                    // height: MediaQuery.sizeOf(context).height / 5,
+                    color: Colors.grey[800],
+                    child: Text(
+                      "See All Transactions ->",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
                 SingleChildScrollView(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -163,7 +253,7 @@ class expenseSummary extends StatelessWidget {
                         .getThisWeekTransactions(sunday, monday, tuesday,
                             wednesday, thursday, friday, saturday)
                         .length,
-                    itemBuilder: (context, index) => expenseTile(
+                    itemBuilder: (context, index) => to_take_tile(
                         deleteTile: () => value.deleteExpense(value.getThisWeekTransactions(
                             sunday,
                             monday,
@@ -172,10 +262,10 @@ class expenseSummary extends StatelessWidget {
                             thursday,
                             friday,
                             saturday)[index]),
-                        isExpense: value
+                        task: value
                             .getThisWeekTransactions(sunday, monday, tuesday,
                                 wednesday, thursday, friday, saturday)[index]
-                            .isExpense,
+                            .task,
                         name: value
                             .getThisWeekTransactions(
                                 sunday, monday, tuesday, wednesday, thursday, friday, saturday)[index]

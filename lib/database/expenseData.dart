@@ -104,7 +104,7 @@ class ExpenseData extends ChangeNotifier {
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
-      if (expense.isExpense) {
+      if (expense.task == "expense") {
         if (dailyExpenseSummary.containsKey(date)) {
           dailyExpenseSummary[date]!.add(amount);
         } else {
@@ -125,7 +125,7 @@ class ExpenseData extends ChangeNotifier {
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
-      if (expense.isExpense) {
+      if (expense.task == "expense") {
         if (dailyExpenseSummary.containsKey(date)) {
           dailyExpenseSummary[date]!.add(amount);
         } else {
@@ -198,7 +198,43 @@ class ExpenseData extends ChangeNotifier {
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
-      if (!expense.isExpense) {
+      if (expense.task == "credit") {
+        if (dailyExpenseSummary.containsKey(date)) {
+          dailyExpenseSummary[date]!.add(amount);
+        } else {
+          dailyExpenseSummary.addAll({
+            date: [amount]
+          });
+        }
+      }
+    }
+    return dailyExpenseSummary;
+  }
+
+  Map<String, List<double>> getAllBorrows() {
+    Map<String, List<double>> dailyExpenseSummary = {};
+    for (var expense in overAllExpenseList) {
+      String date = convertDateTimeToString(expense.dateTime);
+      double amount = double.parse(expense.amount);
+      if (expense.task == "credit") {
+        if (dailyExpenseSummary.containsKey(date)) {
+          dailyExpenseSummary[date]!.add(amount);
+        } else {
+          dailyExpenseSummary.addAll({
+            date: [amount]
+          });
+        }
+      }
+    }
+    return dailyExpenseSummary;
+  }
+
+  Map<String, List<double>> getAllLents() {
+    Map<String, List<double>> dailyExpenseSummary = {};
+    for (var expense in overAllExpenseList) {
+      String date = convertDateTimeToString(expense.dateTime);
+      double amount = double.parse(expense.amount);
+      if (expense.task == "credit") {
         if (dailyExpenseSummary.containsKey(date)) {
           dailyExpenseSummary[date]!.add(amount);
         } else {

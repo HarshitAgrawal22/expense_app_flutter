@@ -3,16 +3,16 @@ class ExpenseItem {
   final String name;
   final String amount;
   final DateTime dateTime;
-  final bool isExpense;
+  final String task;
 
   ExpenseItem(
       {required this.name,
-      required this.isExpense,
+      required this.task,
       required this.amount,
       required this.dateTime});
   @override
   String toString() {
     // TODO: implement toString
-    return "${this.amount}    ${this.isExpense}      ${this.amount}       ${this.dateTime} ";
+    return "${this.amount}    ${this.task}      ${this.amount}       ${this.dateTime} ";
   }
 }

@@ -1,8 +1,10 @@
 import 'package:expense_app/database/expenseData.dart';
 import 'package:expense_app/pages/homePage.dart';
+import 'package:expense_app/utilities/noti_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   // initialize hive
@@ -11,7 +13,13 @@ void main() async {
   // open the hive box
   await Hive.openBox("expenseDB");
   await Hive.openBox("creditDB");
-  runApp(const MyApp());
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
