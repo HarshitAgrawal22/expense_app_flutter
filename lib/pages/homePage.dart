@@ -2,8 +2,11 @@ import 'package:expense_app/components/expense_summary.dart';
 import 'package:expense_app/components/expense_title.dart';
 import 'package:expense_app/database/expenseData.dart';
 import 'package:expense_app/models/expenseItems.dart';
+import 'package:expense_app/utilities/noti_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class homePage extends StatefulWidget {
   const homePage({super.key});
@@ -23,7 +26,7 @@ class _homePageState extends State<homePage> {
     Provider.of<ExpenseData>(context, listen: false).prepareData();
   }
 
-  void save(String task) {
+  void save(String task) async {
     if (newExpenseNameController.text.isNotEmpty &&
         NewExpenseAmountController.text.isNotEmpty) {
       ExpenseItem newExpense = ExpenseItem(
@@ -33,10 +36,46 @@ class _homePageState extends State<homePage> {
           dateTime: DateTime.now());
       Provider.of<ExpenseData>(context, listen: false)
           .addNewExpense(newExpense);
-      newExpenseNameController.clear();
-      NewExpenseAmountController.clear();
       Navigator.pop(context);
+
+      // Initialize time zone data
+      tz.initializeTimeZones();
+
+      // Schedule the notification
+      DateTime now = DateTime.now();
+      if (task == "lent") {
+        for (int i = 1; i < 6; i++) {
+          DateTime reminderTime = now.add(Duration(days: i));
+
+          await NotificationService().scheduleReminderNotification(
+            title: "${newExpenseNameController.text}",
+            body:
+                "time o get back 💰${NewExpenseAmountController.text}rs from ${newExpenseNameController.text}",
+            scheduledTime: reminderTime,
+          );
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Reminders scheduled")),
+        );
+      }
+      if (task == "borrowed") {
+        for (int i = 1; i < 6; i++) {
+          DateTime reminderTime = now.add(Duration(days: i));
+
+          await NotificationService().scheduleReminderNotification(
+            title: "${newExpenseNameController.text}",
+            body:
+                "time to return: 💸${NewExpenseAmountController.text}rs to ${newExpenseNameController.text} ",
+            scheduledTime: reminderTime,
+          );
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Reminders scheduled")),
+        );
+      }
     }
+    newExpenseNameController.clear();
+    NewExpenseAmountController.clear();
   }
 
   String? selectedOption;
@@ -113,8 +152,10 @@ class _homePageState extends State<homePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   MaterialButton(
-                    onPressed: () {
-                      save(selectedOption!);
+                    onPressed: () async {
+                      save(
+                        selectedOption!,
+                      );
                       selectedOption = null;
                     }, // Pass updated value
                     child: Text(
@@ -144,6 +185,7 @@ class _homePageState extends State<homePage> {
     newExpenseNameController.clear();
     NewExpenseAmountController.clear();
     Navigator.pop(context);
+    selectedOption = null;
   }
 
   @override

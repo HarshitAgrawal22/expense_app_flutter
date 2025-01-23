@@ -145,9 +145,9 @@ class expenseSummary extends StatelessWidget {
                           fontSize: MediaQuery.sizeOf(context).height / 45),
                     ),
                     Text(
-                      "Total: ${getTotal(value.getAllCredits().values.toList()) + getTotal(value.getAllLents().values.toList()) - getTotal(value.getAllExpenses().values.toList()) - -getTotal(value.getAllBorrows().values.toList())}",
+                      "Balance: ${getTotal(value.getAllCredits().values.toList()) + getTotal(value.getAllLents().values.toList()) - getTotal(value.getAllExpenses().values.toList()) - -getTotal(value.getAllBorrows().values.toList())}",
                       style: TextStyle(
-                          color: Colors.yellow,
+                          color: Colors.blue,
                           fontSize: MediaQuery.sizeOf(context).height / 45),
                     ),
                   ],
@@ -211,43 +211,39 @@ class expenseSummary extends StatelessWidget {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    // Initialize time zone data
-                    tz.initializeTimeZones();
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     // Initialize time zone data
+                //     tz.initializeTimeZones();
 
-                    // Schedule the notification
-                    DateTime now = DateTime.now();
-                    DateTime reminderTime = now.add(Duration(seconds: 10));
+                //     // Schedule the notification
+                //     DateTime now = DateTime.now();
+                //     DateTime reminderTime = now.add(const Duration(days: 5));
 
-                    await NotificationService().scheduleReminderNotification(
-                      title: "Reminder!",
-                      body: "Don't forget to complete your task.",
-                      scheduledTime: reminderTime,
-                    );
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("Reminder scheduled at $reminderTime")),
-                    );
-                  },
-                  child: Text("Set Reminder"),
-                ),
+                //     await NotificationService().scheduleReminderNotification(
+                //       title: "Reminder!",
+                //       body: "Don't forget to complete your task.",
+                //       scheduledTime: reminderTime,
+                //     );
+                //   },
+                //   child: Text("Set Reminder"),
+                // ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.sizeOf(context).height / 30,
+                    vertical: MediaQuery.sizeOf(context).height / 80,
                   ),
                   child: MaterialButton(
+                    minWidth: MediaQuery.sizeOf(context).width * 90 / 100,
                     onPressed: () {
-                      NotificationService()
-                          .showNotification(title: "billo", body: "rani");
+                      // NotificationService()
+                      //     .showNotification(title: "billo", body: "rani");
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => totalExpensePage()));
                     },
                     // height: MediaQuery.sizeOf(context).height / 5,
                     color: Colors.grey[800],
                     child: Text(
-                      "See All Transactions ->",
+                      "See All Transactions",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
