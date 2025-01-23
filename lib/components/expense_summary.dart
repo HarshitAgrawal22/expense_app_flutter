@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_app/pages/totalExpensespage.dart';
 import 'package:expense_app/components/expense_title.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class expenseSummary extends StatelessWidget {
   final DateTime startOfWeek;
@@ -209,6 +211,28 @@ class expenseSummary extends StatelessWidget {
                     ),
                   ],
                 ),
+                ElevatedButton(
+                  onPressed: () async {
+                    // Initialize time zone data
+                    tz.initializeTimeZones();
+
+                    // Schedule the notification
+                    DateTime now = DateTime.now();
+                    DateTime reminderTime = now.add(Duration(seconds: 10));
+
+                    await NotificationService().scheduleReminderNotification(
+                      title: "Reminder!",
+                      body: "Don't forget to complete your task.",
+                      scheduledTime: reminderTime,
+                    );
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("Reminder scheduled at $reminderTime")),
+                    );
+                  },
+                  child: Text("Set Reminder"),
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.sizeOf(context).height / 30,
@@ -219,23 +243,6 @@ class expenseSummary extends StatelessWidget {
                           .showNotification(title: "billo", body: "rani");
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => totalExpensePage()));
-                    },
-                    // height: MediaQuery.sizeOf(context).height / 5,
-                    color: Colors.grey[800],
-                    child: Text(
-                      "See All Transactions ->",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.sizeOf(context).height / 30,
-                  ),
-                  child: MaterialButton(
-                    onPressed: () {
-                      NotificationService()
-                          .showNotification(title: "billo", body: "rani");
                     },
                     // height: MediaQuery.sizeOf(context).height / 5,
                     color: Colors.grey[800],

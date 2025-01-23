@@ -18,7 +18,7 @@ void main() async {
   }
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();
-
+  NotificationService().requestExactAlarmPermission();
   runApp(MyApp());
 }
 
