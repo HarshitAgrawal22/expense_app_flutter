@@ -132,13 +132,13 @@ class expenseSummary extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      "Wallet: ${getTotal(value.getAllCredits().values.toList()) - getTotal(value.getAllExpenses().values.toList())}",
+                      "Wallet: ${getTotal(value.getAllCredits().values.toList()) - getTotal(value.getAllExpenses().values.toList()) + getTotal(value.getAllBorrows().values.toList()) - getTotal(value.getAllLents().values.toList())}",
                       style: TextStyle(
                           color: Colors.yellow,
                           fontSize: MediaQuery.sizeOf(context).height / 45),
                     ),
                     Text(
-                      "Balance: ${getTotal(value.getAllCredits().values.toList()) + getTotal(value.getAllLents().values.toList()) - getTotal(value.getAllExpenses().values.toList()) - -getTotal(value.getAllBorrows().values.toList())}",
+                      "Balance: ${getTotal(value.getAllCredits().values.toList()) + getTotal(value.getAllLents().values.toList()) - getTotal(value.getAllExpenses().values.toList()) - getTotal(value.getAllBorrows().values.toList())}",
                       style: TextStyle(
                           color: Colors.blue,
                           fontSize: MediaQuery.sizeOf(context).height / 45),

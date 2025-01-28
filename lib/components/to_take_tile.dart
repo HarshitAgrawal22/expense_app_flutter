@@ -17,13 +17,13 @@ class to_take_tile extends StatelessWidget {
   Color taskSelector(String task) {
     print(task);
     if (task == "expense") {
-      return Colors.red.shade500;
+      return Colors.red.shade800;
     } else if (task == "credit") {
-      return Colors.green.shade500;
+      return Colors.green.shade800;
     } else if (task == "lent") {
-      return Colors.blue.shade500;
+      return Colors.blue.shade800;
     } else if (task == "borrowed") {
-      return Colors.purple.shade500;
+      return Colors.purple.shade800;
     }
     return Colors.white;
   }
@@ -134,7 +134,7 @@ class to_take_tile extends StatelessWidget {
           tileColor: taskSelector(task),
           title: Text(
             name,
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
           subtitle: Text(
             dateTime.day.toString() +
@@ -142,11 +142,11 @@ class to_take_tile extends StatelessWidget {
                 dateTime.month.toString() +
                 " / " +
                 dateTime.year.toString(),
-            style: TextStyle(color: Colors.grey.shade800),
+            style: TextStyle(color: Colors.grey.shade200),
           ),
           trailing: Text(
             amount + " Rs. ",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ),
