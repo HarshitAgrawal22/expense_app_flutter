@@ -1,12 +1,10 @@
 import 'package:expense_app/components/expense_summary.dart';
-import 'package:expense_app/components/expense_title.dart';
 import 'package:expense_app/database/expenseData.dart';
 import 'package:expense_app/models/expenseItems.dart';
 import 'package:expense_app/utilities/noti_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 class homePage extends StatefulWidget {
   const homePage({super.key});
@@ -44,31 +42,29 @@ class _homePageState extends State<homePage> {
       // Schedule the notification
       DateTime now = DateTime.now();
       if (task == "lent") {
-        for (int i = 1; i < 6; i++) {
-          DateTime reminderTime = now.add(Duration(days: i));
+        DateTime reminderTime = now.add(Duration(days: 5));
 
-          await NotificationService().scheduleReminderNotification(
-            title: "${newExpenseNameController.text}",
-            body:
-                "time o get back 💰${NewExpenseAmountController.text}rs from ${newExpenseNameController.text}",
-            scheduledTime: reminderTime,
-          );
-        }
+        await NotificationService().scheduleReminderNotification(
+          title: "${newExpenseNameController.text}",
+          body:
+              "time o get back 💰${NewExpenseAmountController.text}rs from ${newExpenseNameController.text}",
+          scheduledTime: reminderTime,
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Reminders scheduled")),
         );
       }
       if (task == "borrowed") {
-        for (int i = 1; i < 6; i++) {
-          DateTime reminderTime = now.add(Duration(days: i));
+        DateTime reminderTime = now.add(Duration(days: 5));
 
-          await NotificationService().scheduleReminderNotification(
-            title: "${newExpenseNameController.text}",
-            body:
-                "time to return: 💸${NewExpenseAmountController.text}rs to ${newExpenseNameController.text} ",
-            scheduledTime: reminderTime,
-          );
-        }
+        await NotificationService().scheduleReminderNotification(
+          title: "${newExpenseNameController.text}",
+          body:
+              "time to return: 💸${NewExpenseAmountController.text}rs to ${newExpenseNameController.text} ",
+          scheduledTime: reminderTime,
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Reminders scheduled")),
         );

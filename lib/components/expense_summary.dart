@@ -3,13 +3,9 @@ import 'package:expense_app/components/to_take_tile.dart';
 import 'package:expense_app/database/expenseData.dart';
 import 'package:expense_app/datetime/date__time_helper.dart';
 import 'package:expense_app/models/expenseItems.dart';
-import 'package:expense_app/utilities/noti_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_app/pages/totalExpensespage.dart';
-import 'package:expense_app/components/expense_title.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 class expenseSummary extends StatelessWidget {
   final DateTime startOfWeek;
@@ -20,7 +16,6 @@ class expenseSummary extends StatelessWidget {
     // here we are getting the highest expense of the week and according to that
     // all other expenses will be judged
     double max = 0;
-    print(list2);
 
     for (List<ExpenseItem> dayExpense in list2) {
       for (ExpenseItem expense in dayExpense)
@@ -33,7 +28,6 @@ class expenseSummary extends StatelessWidget {
   }
 
   double getWeekTotal(List weekExpenses) {
-    print("${weekExpenses}  are the");
     double total = 0;
     for (List<double> dayExpense in weekExpenses) {
       for (double expense in dayExpense) {
@@ -61,7 +55,6 @@ class expenseSummary extends StatelessWidget {
   }
 
   int getTotal(List weekExpenses) {
-    print("${weekExpenses}  are the");
     int total = 0;
     for (List<double> dayExpense in weekExpenses) {
       for (double expense in dayExpense) {

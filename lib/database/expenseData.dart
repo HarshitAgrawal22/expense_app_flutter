@@ -100,7 +100,6 @@ class ExpenseData extends ChangeNotifier {
   Map<String, List<double>> getAllExpenses() {
     Map<String, List<double>> dailyExpenseSummary = {};
 
-    print("${overAllExpenseList}  are all the transactions");
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
@@ -120,8 +119,6 @@ class ExpenseData extends ChangeNotifier {
 
   Map<String, List<double>> getThisWeekExpenses() {
     Map<String, List<double>> dailyExpenseSummary = {};
-
-    print("${overAllExpenseList}  are all the transactions");
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
@@ -168,7 +165,6 @@ class ExpenseData extends ChangeNotifier {
       ...thisWeekExpenses[friday] ?? [],
       ...thisWeekExpenses[saturday] ?? []
     ];
-    print("$finalList  is the value in final list");
 
     return finalList.reversed.toList();
   }
@@ -185,9 +181,6 @@ class ExpenseData extends ChangeNotifier {
           date: [expense]
         });
       }
-    }
-    for (var i in allExpenses.values) {
-      print(i);
     }
 
     return allExpenses;
@@ -216,7 +209,7 @@ class ExpenseData extends ChangeNotifier {
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
-      if (expense.task == "credit") {
+      if (expense.task == "borrowed") {
         if (dailyExpenseSummary.containsKey(date)) {
           dailyExpenseSummary[date]!.add(amount);
         } else {
@@ -234,7 +227,7 @@ class ExpenseData extends ChangeNotifier {
     for (var expense in overAllExpenseList) {
       String date = convertDateTimeToString(expense.dateTime);
       double amount = double.parse(expense.amount);
-      if (expense.task == "credit") {
+      if (expense.task == "lent") {
         if (dailyExpenseSummary.containsKey(date)) {
           dailyExpenseSummary[date]!.add(amount);
         } else {

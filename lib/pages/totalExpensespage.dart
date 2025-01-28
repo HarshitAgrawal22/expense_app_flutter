@@ -1,9 +1,6 @@
 import 'package:expense_app/components/to_take_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_app/components/expense_summary.dart' as expense_summary;
-import 'package:expense_app/components/expense_title.dart';
 import 'package:expense_app/database/expenseData.dart';
-import 'package:expense_app/models/expenseItems.dart';
 import 'package:provider/provider.dart';
 
 class totalExpensePage extends StatefulWidget {
