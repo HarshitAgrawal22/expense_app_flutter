@@ -51,7 +51,6 @@ we will need to convert that to expenseItem objects
 
     List savedExpenses = myBox.get("all_expenses") ?? [];
     List<ExpenseItem> allExpenses = [];
-    print(savedExpenses);
     for (int i = 0; i < savedExpenses.length; i++) {
       // Collecting individual data
       String name = savedExpenses[i][0];

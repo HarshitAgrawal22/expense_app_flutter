@@ -47,7 +47,7 @@ class _homePageState extends State<homePage> {
         await NotificationService().scheduleReminderNotification(
           title: "${newExpenseNameController.text}",
           body:
-              "time o get back 💰${NewExpenseAmountController.text}rs from ${newExpenseNameController.text}",
+              "time to get back 💰${NewExpenseAmountController.text}rs from ${newExpenseNameController.text}",
           scheduledTime: reminderTime,
         );
 
@@ -193,7 +193,7 @@ class _homePageState extends State<homePage> {
           onPressed: addNewExpense,
           child: Icon(Icons.add),
           foregroundColor: Colors.black,
-          backgroundColor: Colors.yellow,
+          backgroundColor: Colors.yellow.shade900,
         ),
         body: ListView(
           children: [

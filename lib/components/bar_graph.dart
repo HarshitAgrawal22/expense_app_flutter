@@ -82,12 +82,12 @@ class MyGraph extends StatelessWidget {
         return BarChartRodData(
           toY: expense,
           color: entry.value.task == "expense"
-              ? Colors.red
+              ? Colors.red.shade900
               : entry.value.task == "credit"
-                  ? Colors.green
+                  ? Colors.green.shade900
                   : entry.value.task == "lent"
-                      ? Colors.blue
-                      : Colors.purple,
+                      ? Colors.blue.shade900
+                      : Colors.purple.shade900,
 
           //  colors[           index % colors.length], // Use a different color for each expense
           width: MediaQuery.sizeOf(context).width /

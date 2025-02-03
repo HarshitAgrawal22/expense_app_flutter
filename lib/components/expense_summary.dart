@@ -91,60 +91,122 @@ class expenseSummary extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          "Expense: ",
-                          style: TextStyle(
-                              fontSize: MediaQuery.sizeOf(context).height / 60,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[0]}",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: MediaQuery.sizeOf(context).height / 55),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.red.shade900,
+                              borderRadius: BorderRadius.circular(
+                                  MediaQuery.sizeOf(context).height / 90)),
+                          padding: EdgeInsets.symmetric(
+                              vertical: MediaQuery.sizeOf(context).height / 90,
+                              horizontal:
+                                  MediaQuery.sizeOf(context).width / 90),
+                          child: Row(children: [
+                            Text(
+                              "Expense: ",
+                              style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.sizeOf(context).height / 60,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[0]}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      MediaQuery.sizeOf(context).height / 55),
+                            )
+                          ]),
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "Credits: ",
-                          style: TextStyle(
-                              fontSize: MediaQuery.sizeOf(context).height / 60,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[1]}",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontSize: MediaQuery.sizeOf(context).height / 55),
-                        )
-                      ],
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.green.shade900,
+                          borderRadius: BorderRadius.circular(
+                              MediaQuery.sizeOf(context).height / 90)),
+                      padding: EdgeInsets.symmetric(
+                          vertical: MediaQuery.sizeOf(context).height / 90,
+                          horizontal: MediaQuery.sizeOf(context).width / 90),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Credits: ",
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 60,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[1]}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 55),
+                          )
+                        ],
+                      ),
                     ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.purple.shade900,
+                          borderRadius: BorderRadius.circular(
+                              MediaQuery.sizeOf(context).height / 90)),
+                      padding: EdgeInsets.symmetric(
+                          vertical: MediaQuery.sizeOf(context).height / 90,
+                          horizontal: MediaQuery.sizeOf(context).width / 90),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Borrowed: ",
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 60,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[2]}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 55),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue.shade900,
+                          borderRadius: BorderRadius.circular(
+                              MediaQuery.sizeOf(context).height / 90)),
+                      padding: EdgeInsets.symmetric(
+                          vertical: MediaQuery.sizeOf(context).height / 90,
+                          horizontal: MediaQuery.sizeOf(context).width / 90),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Lent: ",
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 60,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[3]}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 55),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height / 40,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      "Wallet: ${getTotal(value.getAllCredits().values.toList()) - getTotal(value.getAllExpenses().values.toList()) + getTotal(value.getAllBorrows().values.toList()) - getTotal(value.getAllLents().values.toList())}",
-                      style: TextStyle(
-                          color: Colors.yellow,
-                          fontSize: MediaQuery.sizeOf(context).height / 45),
-                    ),
-                    Text(
-                      "Balance: ${getTotal(value.getAllCredits().values.toList()) + getTotal(value.getAllLents().values.toList()) - getTotal(value.getAllExpenses().values.toList()) - getTotal(value.getAllBorrows().values.toList())}",
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: MediaQuery.sizeOf(context).height / 45),
-                    ),
-                  ],
-                ),
+
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height / 40,
                 ),
@@ -165,42 +227,40 @@ class expenseSummary extends StatelessWidget {
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height / 40,
                 ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Borrowed: ",
-                          style: TextStyle(
-                              fontSize: MediaQuery.sizeOf(context).height / 60,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[2]}",
-                          style: TextStyle(
-                              color: Colors.purple,
-                              fontSize: MediaQuery.sizeOf(context).height / 55),
-                        ),
-                      ],
+                    Text(
+                      "Wallet: ${getTotal(value.getAllCredits().values.toList()) - getTotal(value.getAllExpenses().values.toList()) + getTotal(value.getAllBorrows().values.toList()) - getTotal(value.getAllLents().values.toList())}",
+                      style: TextStyle(
+                          color: Colors.yellow,
+                          fontSize: MediaQuery.sizeOf(context).height / 45),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "Lent: ",
-                          style: TextStyle(
-                              fontSize: MediaQuery.sizeOf(context).height / 60,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                    Text(
+                      "Balance: ${getTotal(value.getAllCredits().values.toList()) + getTotal(value.getAllLents().values.toList()) - getTotal(value.getAllExpenses().values.toList()) - getTotal(value.getAllBorrows().values.toList())}",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: MediaQuery.sizeOf(context).height / 45),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: MediaQuery.sizeOf(context).height / 80,
+                      ),
+                      child: MaterialButton(
+                        onPressed: () {
+                          // NotificationService()
+                          //     .showNotification(title: "billo", body: "rani");
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => totalExpensePage()));
+                        },
+                        // height: MediaQuery.sizeOf(context).height / 5,
+                        color: Colors.grey[800],
+                        child: Text(
+                          "All Transactions",
+                          style: TextStyle(color: Colors.white),
                         ),
-                        Text(
-                          "${getWeekSummary(value.getThisWeekTransactions(sunday, monday, tuesday, wednesday, thursday, friday, saturday))[3]}",
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: MediaQuery.sizeOf(context).height / 55),
-                        )
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -221,26 +281,7 @@ class expenseSummary extends StatelessWidget {
                 //   },
                 //   child: Text("Set Reminder"),
                 // ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.sizeOf(context).height / 80,
-                  ),
-                  child: MaterialButton(
-                    minWidth: MediaQuery.sizeOf(context).width * 90 / 100,
-                    onPressed: () {
-                      // NotificationService()
-                      //     .showNotification(title: "billo", body: "rani");
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => totalExpensePage()));
-                    },
-                    // height: MediaQuery.sizeOf(context).height / 5,
-                    color: Colors.grey[800],
-                    child: Text(
-                      "See All Transactions",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
+
                 SingleChildScrollView(
                   child: ListView.builder(
                     shrinkWrap: true,

@@ -83,12 +83,12 @@ class to_take_tile extends StatelessWidget {
           ],
         ),
         backgroundColor: task == "expense"
-            ? Colors.red.shade700
+            ? Colors.red.shade900
             : task == "credit"
-                ? Colors.green.shade700
+                ? Colors.green.shade900
                 : task == "borrowed"
-                    ? Colors.purple.shade700
-                    : Colors.blue.shade700,
+                    ? Colors.purple.shade900
+                    : Colors.blue.shade900,
         content: SingleChildScrollView(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,7 +102,9 @@ class to_take_tile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${weekDaySelector(dateTime.add(Duration(days: 4)).weekday)}",
+                      task == "borrowed" || task == "lent"
+                          ? "${weekDaySelector(dateTime.add(Duration(days: 4)).weekday)}"
+                          : "${weekDaySelector(dateTime.weekday)}",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: MediaQuery.sizeOf(context).width / 25),
